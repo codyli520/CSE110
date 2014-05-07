@@ -12,8 +12,8 @@ import org.junit.Test;
 
 public class ReceiverTest {
 
-    	@Test
-	public void testReceiveMessage() throws JMSException, IOException {
+    @Test //CODY
+    public void testReceiveMessage() throws JMSException, IOException {
 		Receiver testRe = new Receiver();
 		String s =  new String ("testing");
 		Sender testSe = new Sender(001,1);		
