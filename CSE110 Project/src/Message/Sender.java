@@ -23,11 +23,11 @@ public class Sender {
     ConnectionFactory connectionFactory;
     // Connection 
     Connection connection = null;
-    // Session arrayList£º
+    // Session arrayListï¿½ï¿½
     Session[] sessions;
-    // Destination array £º
+    // Destination array ï¿½ï¿½
     Destination[] destinations;
-    // MessageProducer array£º
+    // MessageProducer arrayï¿½ï¿½
     MessageProducer[] producers;
     // Sender ID (SID)
     int sid;
@@ -112,7 +112,7 @@ public class Sender {
     		TextMessage message = session
     	            .createTextMessage(inputstring);
     	           
-    	        System.out.println("Send£º" + inputstring);
+    	        System.out.println("Send  " + inputstring);
     	        producer.send(message);
     	}
     	catch(Exception e){
