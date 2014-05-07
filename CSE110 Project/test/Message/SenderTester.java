@@ -1,10 +1,10 @@
-package Message.test;
+package Message;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class SenderTest {
+public class SenderTester {
 
 	@Test
 	public void test() {
