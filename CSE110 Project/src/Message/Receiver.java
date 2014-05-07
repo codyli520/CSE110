@@ -34,6 +34,7 @@ public class Receiver {
             session = connection.createSession(Boolean.FALSE,
                     Session.AUTO_ACKNOWLEDGE);
             // 
+            //take user input, decide which queue it should be
             destination = session.createQueue("FirstQueue");
             consumer = session.createConsumer(destination);
             while (true) {
