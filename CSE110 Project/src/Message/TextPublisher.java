@@ -33,7 +33,7 @@ connection.start();
 ActiveMQSession session = (ActiveMQSession) connection.createSession(                
 false, Session.AUTO_ACKNOWLEDGE);      
  
-Destination destination = session.createTopic("txts.txt");       
+Destination destination = session.createQueue("txts.txt");       
      
 MessageProducer producer = session.createProducer(destination);       
 producer.setDeliveryMode(DeliveryMode.PERSISTENT);
