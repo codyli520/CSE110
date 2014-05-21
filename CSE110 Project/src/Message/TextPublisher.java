@@ -25,14 +25,20 @@ public class TextPublisher {
 	Destination destination;
 	MessageProducer producer;
 	BlobMessage blobMessage;
+	String topic;
 
 	public static void main(String[] args){
 		TextPublisher testPublisher = new TextPublisher();
-		testPublisher.publishMessage("testQueue");
+		testPublisher.publishMessage();
 	}
 	
-	public TextPublisher(){  
+	public TextPublisher(){
+		this("test4");
+	}
+	
+	public TextPublisher(String newTopic){  
 		fileChooser = new JFileChooser();
+		topic = newTopic;
 	}
 
 	public boolean chooseFile(){
@@ -44,7 +50,7 @@ public class TextPublisher {
 		return true;
 	}
 
-	public boolean initPublisher(String topic){
+	public boolean initPublisher(){
 		try{
 			connectionFactory = new ActiveMQConnectionFactory(
 					"tcp://localhost:61616?jms.blobTransferPolicy.defaultUploadUrl=http://localhost:8161/fileserver/");         
@@ -61,13 +67,14 @@ public class TextPublisher {
 		return true;
 	}
 	
-	public boolean publishMessage(String topic){
-		if( chooseFile() && initPublisher(topic) ){
+	public boolean publishMessage(){
+		if( chooseFile() && initPublisher() ){
 			try{
 				blobMessage = session.createBlobMessage(file);
 				blobMessage.setStringProperty("FILE.NAME", file.getName());
-				blobMessage.setLongProperty("FILE.SIZE", file.length());producer.send(blobMessage);       
-				System.out.println("Text posted!" + file.getName());        
+				blobMessage.setLongProperty("FILE.SIZE", file.length());
+				producer.send(blobMessage);       
+				System.out.println("Text posted!" + file.getName());
 				producer.close();        
 				session.close();       
 				connection.close(); 
@@ -82,3 +89,5 @@ public class TextPublisher {
 		}
 	}
 }
+
+

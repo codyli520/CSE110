@@ -31,23 +31,46 @@ public class TextReceiver {
 	Txtreturn txtreturn;
 	String topic;
 	
+	public static void main(String[] args) throws JMSException{
+		TextReceiver testReceiver = new TextReceiver();
+		testReceiver.readMessage();
+		System.out.println("done");
+	}
+	
 	public TextReceiver() throws JMSException{
-		this("default");
+		this("test4");
 	}
 	
 	public TextReceiver(String newTopic) throws JMSException{
 		topic = newTopic;
+		/*System.out.println(topic);
 		connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");        
 		connection = connectionFactory.createConnection();         
 		connection.start();       
 		
 		session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);       
 		destination = session.createQueue(topic);
-		consumer = session.createConsumer(destination);
+		consumer = session.createConsumer(destination);*/
 	}
 	
-	public boolean blobReceive() throws JMSException{
-		blobMessage = (BlobMessage)consumer.receive();
+	public boolean blobReceive(){
+		try{
+			connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");        
+			connection = connectionFactory.createConnection();         
+			connection.start();       
+			
+			session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);       
+			destination = session.createQueue(topic);
+			consumer = session.createConsumer(destination);
+			System.out.println("start receive");
+			blobMessage = (BlobMessage)consumer.receive(10000);
+			System.out.println("inside receive");
+		}
+		catch(JMSException e){
+			System.out.println("!");
+			e.printStackTrace();
+			
+		}
 		if (blobMessage==null){
 			return false;
 		}
@@ -58,17 +81,20 @@ public class TextReceiver {
 	
 	//this method should only be called if blobReceive returns true
 	public boolean readMessage(){
-		if (blobMessage!=null){
+		System.out.println("read start");
+		if (!blobReceive()){
+			System.out.println("error blob receive");
 			return false;
 		}
 		else{
+			System.out.println("go go go");
 			try{
 				String fileName = blobMessage.getStringProperty("FILE.NAME");                       	                          
 				File file = new File("ToRead.txt");                            
 				OutputStream os = new FileOutputStream(file);                           
-				System.out.println("StartReading£º" + fileName);                            
+				System.out.println("StartReadingï¼š" + fileName);                            
 				InputStream inputStream = blobMessage.getInputStream();                            
-				//Ð´ÎÄ¼þ£¬ÄãÒ²¿ÉÒÔÊ¹ÓÃÆäËû·½Ê½                        
+				//å†™æ–‡ä»¶ï¼Œä½ ä¹Ÿå¯ä»¥ä½¿ç”¨å…¶ä»–æ–¹å¼                        
 				byte[] buff = new byte[256];                          
 				int len = 0;                            
 				while ((len = inputStream.read(buff))>0) {                                
@@ -88,5 +114,7 @@ public class TextReceiver {
 	}	
        
 }  
+
+
 
 
