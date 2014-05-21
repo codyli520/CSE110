@@ -28,12 +28,12 @@ public class TextPublisher {
 	String topic;
 
 	public static void main(String[] args){
-		TextPublisher testPublisher = new TextPublisher("topic2");
+		TextPublisher testPublisher = new TextPublisher("test0");
 		testPublisher.publishMessage();
 	}
 	
 	public TextPublisher(){
-		this("test4");
+		this("test0");
 	}
 	
 	public TextPublisher(String newTopic){  

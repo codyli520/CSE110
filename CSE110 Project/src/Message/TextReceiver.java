@@ -32,17 +32,18 @@ public class TextReceiver {
 	String topic;
 	
 	public static void main(String[] args) throws JMSException{
-		TextReceiver testReceiver = new TextReceiver("topic2");
+		TextReceiver testReceiver = new TextReceiver("test0");
 		testReceiver.readMessage();
 		System.out.println("done");
 	}
 	
 	public TextReceiver() throws JMSException{
-		this("test4");
+		this("test0");
 	}
 	
 	public TextReceiver(String newTopic) throws JMSException{
 		topic = newTopic;
+		connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");  
 		/*System.out.println(topic);
 		connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");        
 		connection = connectionFactory.createConnection();         
@@ -55,7 +56,7 @@ public class TextReceiver {
 	
 	public boolean blobReceive(){
 		try{
-			connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");        
+			//connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");        
 			connection = connectionFactory.createConnection();         
 			connection.start();       
 			
@@ -105,6 +106,9 @@ public class TextReceiver {
 				textReader.readTxtFile();
 				txtreturn = new Txtreturn(file, topic);
 				txtreturn.returnText();
+				consumer.close();
+				session.close();
+				connection.close();
 	            return true;  
 			} catch (Exception e) {                        
 				e.printStackTrace();
