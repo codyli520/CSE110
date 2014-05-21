@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="E:/Download/apache-activemq-5.9.1-bin/apache-activemq-5.9.1/lib/jcl-over-slf4j-1.7.5.jar"/>
 	<classpathentry kind="lib" path="E:/Download/apache-activemq-5.9.1-bin/apache-activemq-5.9.1/lib/slf4j-api-1.7.5.jar"/>
 	<classpathentry kind="lib" path="F:/Projects/cse110-project/activeMQ/apache-activemq-5.9.1/activemq-all-5.9.1.jar"/>
+	<classpathentry kind="lib" path="/Users/goodrich/Downloads/apache-activemq-5.9.1/activemq-all-5.9.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
