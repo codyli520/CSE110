@@ -32,7 +32,7 @@ public class TextReceiver {
 	String topic;
 	
 	public static void main(String[] args) throws JMSException{
-		TextReceiver testReceiver = new TextReceiver();
+		TextReceiver testReceiver = new TextReceiver("topic2");
 		testReceiver.readMessage();
 		System.out.println("done");
 	}

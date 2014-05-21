@@ -28,7 +28,7 @@ public class TextPublisher {
 	String topic;
 
 	public static void main(String[] args){
-		TextPublisher testPublisher = new TextPublisher();
+		TextPublisher testPublisher = new TextPublisher("topic2");
 		testPublisher.publishMessage();
 	}
 	
