@@ -31,6 +31,7 @@ public class Sender {
     MessageProducer[] producers;
     // Sender ID (SID)
     int sid;
+    int rid;
     // String[] queues
     String[] queues;
     // int numOfQueue, number of established queue;
@@ -39,7 +40,7 @@ public class Sender {
     static final int maxQueue = 1000;
     int mode; //0, default mode, take system in, other, take inputString
     
-    public static void main(String args[]) throws IOException{
+    /*public static void main(String args[]) throws IOException{
     	if( args.length >= 2 && args[0] != null && args[1] != null){
     		Sender sender = new Sender(Integer.parseInt(args[0]), 0);
     		sender.fullSendService(args[1], null);
@@ -48,7 +49,7 @@ public class Sender {
     		Sender sender = new Sender();
     		sender.fullSendService("FirstQueue", null);
     	}
-    }
+    }*/
     
     public Sender()
     {
@@ -65,6 +66,7 @@ public class Sender {
         producers = new MessageProducer[maxQueue];
         numOfQueue = 0;
         mode = 0;
+        rid=0;
     }
     
     public Sender(int new_sid, int new_mode){
@@ -81,8 +83,24 @@ public class Sender {
         producers = new MessageProducer[maxQueue];
         numOfQueue = 0;
         mode = new_mode;
+        rid=0;
     }
-    
+    public Sender(int new_sid, int new_mode, int new_rid){
+    	// TextMessage message;
+        // ConnectionFactory
+        connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMQConnection.DEFAULT_USER,
+                ActiveMQConnection.DEFAULT_PASSWORD,
+                "tcp://localhost:61616");
+        sid = new_sid;
+        queues = new String[maxQueue];
+        destinations = new Destination[maxQueue];
+        //sessions = new Session[maxQueue]; 
+        producers = new MessageProducer[maxQueue];
+        numOfQueue = 0;
+        mode = new_mode;
+        rid=new_rid;
+    }
     public void sendPrep(String queue) throws IOException{
         try {
             connection = connectionFactory.createConnection();
@@ -115,7 +133,8 @@ public class Sender {
     public void sendMessage( MessageProducer producer, String inputString){   
     	try{
     		String inputstring = grabMessage(inputString);
-            
+            if (rid!=0)
+            	inputString="To "+Integer.toString(rid)+":"+inputString;
     		TextMessage message = session
     	            .createTextMessage(inputstring);
 	        System.out.println("try to send：" + inputstring);
@@ -179,6 +198,5 @@ public class Sender {
     	return numOfQueue;
         }
         
-    
 
 }
