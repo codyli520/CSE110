@@ -14,11 +14,11 @@ public class SenderGUI extends JFrame implements ActionListener {
 	// will first hold "Username:", later on "Enter message"
 	private JLabel label;
 	
-	private JTextField tf;
+	private JTextField tf, messageTf;
 	
 	private JTextField tfServer, tfPort;
 	
-	private JButton login, logout;
+	private JButton login, logout,send;
 	
 	private JTextArea ta;
 	
@@ -36,9 +36,15 @@ public class SenderGUI extends JFrame implements ActionListener {
 		
 		
 		JPanel northPanel = new JPanel(new GridLayout(2,1));
-		JPanel top = new JPanel(new GridLayout(1,2));
+		JPanel top = new JPanel(new GridLayout(1,3));
 		
 		JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3));
+		
+		login = new JButton("Login");
+		login.addActionListener(this);
+		logout = new JButton("Logout");
+		logout.addActionListener(this);
+		logout.setEnabled(false);
 		
 		tfServer = new JTextField(host);
 		tfPort = new JTextField("" + port);
@@ -58,8 +64,10 @@ public class SenderGUI extends JFrame implements ActionListener {
 		
 		tf = new JTextField();
 		tf.setBackground(Color.WHITE);
-		label.setHorizontalAlignment(SwingConstants.RIGHT);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
 		top.add(tf);
+		top.add(login);
+		top.add(logout);
 		northPanel.add(top);
 		add(northPanel, BorderLayout.NORTH);
 
@@ -70,17 +78,16 @@ public class SenderGUI extends JFrame implements ActionListener {
 		ta.setEditable(false);
 		add(centerPanel, BorderLayout.CENTER);
 
-		// the 3 buttons
-		login = new JButton("Login");
-		login.addActionListener(this);
-		logout = new JButton("Logout");
-		logout.addActionListener(this);
-		logout.setEnabled(false);		// you have to login before being able to logout
-				
-
-		JPanel southPanel = new JPanel();
-		southPanel.add(login);
-		southPanel.add(logout);
+		messageTf = new JTextField();
+		messageTf.setBackground(Color.WHITE);
+				// you have to login before being able to logout
+	    send = new JButton("Send");
+        send.addActionListener(this);
+        
+		JPanel southPanel = new JPanel(new GridLayout(2,1));
+		southPanel.add(messageTf);
+		southPanel.add(send);
+		
 		
 		add(southPanel, BorderLayout.SOUTH);
 
@@ -137,7 +144,13 @@ public class SenderGUI extends JFrame implements ActionListener {
 			return;
 		}
 		
-
+		//TODO
+		if(o == send){
+			
+		}
+		
+		
+		
 		if(o == login) {
 			
 			String username = tf.getText().trim();
