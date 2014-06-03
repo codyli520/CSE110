@@ -4,6 +4,7 @@ import javax.jms.MessageProducer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 
 
@@ -122,14 +123,19 @@ public class SenderGUI extends JFrame implements ActionListener {
 		/*if(o == logout) {
 			return;
 		}
+		*/
 		
-		
-		/*if(connected) {
+		if(connected) {
 			// just have to send the message
-			Sender.sendMessage(producers, tf.getText());				
+			try {
+				Sender.fullSendService(defaultHost, tf.getText());
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}				
 			tf.setText("");
 			return;
-		}*/
+		}
 		
 
 		if(o == login) {
