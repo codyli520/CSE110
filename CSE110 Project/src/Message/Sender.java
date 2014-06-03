@@ -118,7 +118,7 @@ public class Sender {
             
     		TextMessage message = session
     	            .createTextMessage(inputstring);
-	        System.out.println("try to send：" + inputstring);
+	        System.out.println("try to send:" + inputstring);
     		
     	        producer.send(message);
     	}
