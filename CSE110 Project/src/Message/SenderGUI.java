@@ -18,7 +18,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 	
 	private JTextField tfServer, tfPort;
 	
-	private JButton login, logout,send;
+	private JButton login, logout,send,receive;
 	
 	private JTextArea ta;
 	
@@ -83,12 +83,15 @@ public class SenderGUI extends JFrame implements ActionListener {
 				// you have to login before being able to logout
 	    send = new JButton("Send");
         send.addActionListener(this);
+        receive = new JButton("Receive");
+        receive.addActionListener(this);
         
 		JPanel southPanel = new JPanel(new GridLayout(2,1));
+		JPanel buttonPanel = new JPanel();
 		southPanel.add(messageTf);
-		southPanel.add(send);
-		
-		
+		buttonPanel.add(send);
+		buttonPanel.add(receive);
+		southPanel.add(buttonPanel);
 		add(southPanel, BorderLayout.SOUTH);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
