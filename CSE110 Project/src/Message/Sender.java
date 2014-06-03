@@ -39,7 +39,7 @@ public class Sender {
     // Max number of queues
     static final int maxQueue = 1000;
     int mode; //0, default mode, take system in, other, take inputString
-    
+    private SenderGUI sg;
     /*public static void main(String args[]) throws IOException{
     	if( args.length >= 2 && args[0] != null && args[1] != null){
     		Sender sender = new Sender(Integer.parseInt(args[0]), 0);
@@ -101,6 +101,24 @@ public class Sender {
         mode = new_mode;
         rid=new_rid;
     }
+    
+    public Sender(int new_sid, int new_mode, int new_rid,SenderGUI gui){
+    	// TextMessage message;
+        // ConnectionFactory
+        connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMQConnection.DEFAULT_USER,
+                ActiveMQConnection.DEFAULT_PASSWORD,
+                "tcp://localhost:61616");
+        sid = new_sid;
+        queues = new String[maxQueue];
+        destinations = new Destination[maxQueue];
+        //sessions = new Session[maxQueue]; 
+        producers = new MessageProducer[maxQueue];
+        numOfQueue = 0;
+        mode = new_mode;
+        rid=new_rid;
+        sg = gui;
+    }
     public void sendPrep(String queue) throws IOException{
         try {
             connection = connectionFactory.createConnection();
@@ -147,7 +165,9 @@ public class Sender {
     	
     }
     
-    public void fullSendService(String queue, String inputString) throws IOException{
+    
+
+	public void fullSendService(String queue, String inputString) throws IOException{
     	int currentNumOfQueue = numOfQueue;
     	try{
     		
@@ -197,6 +217,15 @@ public class Sender {
         public int getNumOfQueue(){
     	return numOfQueue;
         }
+        
+        class ListenFromServer extends Thread {
+
+    		public void run() {
+    						int i=0;
+    						sg.showText(queues[i]);
+    						i++;
+    		}
+    	}
         
 
 }
