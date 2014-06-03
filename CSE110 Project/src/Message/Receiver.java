@@ -51,7 +51,7 @@ public class Receiver {
         }
     	
     }
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Receiver rev=new Receiver();
         try {
             rev.receiverPrep();
@@ -71,7 +71,7 @@ public class Receiver {
             } catch (Throwable ignore) {
             }
         }
-    }
+    }*/
 public Connection getConnection(){
     	return connection;
         }
