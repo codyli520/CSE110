@@ -2,9 +2,14 @@ package Message;
 
 import javax.jms.MessageProducer;
 import javax.swing.*;
+
+import org.omg.CORBA.portable.InputStream;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 
@@ -14,7 +19,8 @@ public class SenderGUI extends JFrame implements ActionListener {
 	// will first hold "Username:", later on "Enter message"
 	private JLabel label;
 	
-	private JTextField tf, messageTf;
+	private JTextField tf;
+	public JTextField messageTf;
 	
 	private JTextField tfServer, tfPort;
 	
@@ -25,7 +31,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 	private boolean connected;
 	private Sender Sender;
 	private int defaultPort;
-	private String defaultHost;
+	private String defaultHost, user;
 	
 	
 	SenderGUI(String host, int port) {
@@ -129,13 +135,14 @@ public class SenderGUI extends JFrame implements ActionListener {
 	*/
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
+		
 		// if it is the Logout button
 		/*if(o == logout) {
 			return;
 		}
 		*/
 		
-		if(connected) {
+		/*if(connected) {
 			// just have to send the message
 			try {
 				Sender.fullSendService(defaultHost, tf.getText());
@@ -145,29 +152,48 @@ public class SenderGUI extends JFrame implements ActionListener {
 			}				
 			tf.setText("");
 			return;
-		}
+		}*/
 		
 		//TODO
 		if(o == send){
+			if(connected == false){
+				ta.setText("Please login to start chat.");
+				
+			}
+			else{
+					try {
+						
+						ta.setText("");
+						Sender.fullSendService(user, messageTf.getText());
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}	
 			
 		}
 		
-		
+		if(o == receive){
+			
+		}
 		
 		if(o == login) {
 			
 			String username = tf.getText().trim();
+			user = tf.getText().trim();
 			int usr = Integer.parseInt(username);
 			
 			if(username.length() == 0)
 				return;
 			
 			String server = tfServer.getText().trim();
-			int sev = Integer.parseInt(server);
+			
 			if(server.length() == 0)
 				return;
 			
 			String portNumber = tfPort.getText().trim();
+			//int rev = Integer.parseInt(portNumber);
 			if(portNumber.length() == 0)
 				return;
 			int port = 0;
@@ -179,12 +205,14 @@ public class SenderGUI extends JFrame implements ActionListener {
 			}
 
 			// try creating a new Sender with GUI
-			Sender = new Sender(usr, port, sev, this);
+			Sender = new Sender(usr, 0, port, this);
 			// test if we can start the Sender
-			
+			//String id = tf.getText();
 			tf.setText("");
-			label.setText("Enter your message below");
+			ta.setText("Enter your message below, click Send when finish");
+			
 			connected = true;
+			
 			
 			
 			login.setEnabled(false);
@@ -194,7 +222,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 			tfServer.setEditable(false);
 			tfPort.setEditable(false);
 			
-			tf.addActionListener(this);
+			messageTf.addActionListener(this);
 		}
 		
 
@@ -202,7 +230,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 
 	// to start the whole thing the server
 	public static void main(String[] args) {
-		new SenderGUI("localhost", 1500);
+		new SenderGUI("localhost", 8161);
 	}
 
 }

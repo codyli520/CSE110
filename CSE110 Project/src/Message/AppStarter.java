@@ -1,14 +1,31 @@
 package Message;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
 
-public class AppStarter {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
-    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException{
-
+public class AppStarter extends JFrame implements ActionListener {
 	String command = null;
+	
+	
+	
+    public void begin() throws FileNotFoundException, UnsupportedEncodingException{
+
+	
 	boolean start = true;
 	Scanner scan = new Scanner(System.in);
+	InputStreamReader ISR = new InputStreamReader(System.in);
+    BufferedReader in = new BufferedReader(ISR);
 	File file;
 	File dir;
 	User user1 = new User(100,"user1","0");
@@ -30,16 +47,45 @@ public class AppStarter {
 	filePath = directoryPath + "host-subject";
 	file = new File(filePath);
 	if(!file.exists()){
-	    newtext = new CreateText(directoryPath, "subject", "host");
+		newtext = new CreateText(directoryPath,"subject" , "host");
+		writetext = new WriteText(directoryPath+"host-subject");
+		writetext.writeToText("Subject List:");
+		//newtext = new CreateText(directoryPath,"subject" , "host");
 	}
 	
 	System.out.println("App Started...");
 	System.out.println("Please enter Command: ");
+	
 	while(start){
-	    
-	    command = scan.next();
+		try{
+			if( command == null && in.ready()){
+				command = in.readLine();
+				if( command == null || command.equals("") ){
+					command = null;
+					continue;
+				}
+				else{
+					System.out.println("terminal command " + command);
+				}
+			}
+			else{
+				if( command != null )
+				{
+					System.out.println("GUI command " + command);
+				}
+				else{
+					continue;
+				}
+			}
+		}
+		catch(IOException e){
+			System.out.println("well");
+			continue;
+		}
+
 	    //if command is view
 	    if(command.equals("view")){
+	    	System.out.println("modeview");
 		fileName = "host-subject";
 		filePath = directoryPath+fileName;
 		file = new File(filePath);   
@@ -128,11 +174,102 @@ public class AppStarter {
 	    }
 
 	    else if(command.equals("quitapp")){
-		break;
+	    	break;
 	    }
+	    command = null;
 	}	
 	
 	scan.close();
 	System.out.println("app quitted");
     }
+
+
+
+	
+	private JLabel label;
+	
+	//private JTextField command;
+	
+	
+	//private JTextField tfServer, tfPort;
+	
+	private JButton view, viewsubject,viewpost,posttext,quitapp;
+	
+	private JTextArea process;
+	
+	private boolean connected;
+	//private Sender Sender;
+	private int defaultPort;
+
+	
+	AppStarter(){
+		
+		view = new JButton("View");
+		viewsubject = new JButton("View Subject");
+		viewpost = new JButton("View Post");
+		posttext = new JButton("Post");
+		quitapp = new JButton("quit");
+		view.addActionListener(this);
+		viewsubject.addActionListener(this);
+		viewpost.addActionListener(this);
+		posttext.addActionListener(this);
+		quitapp.addActionListener(this);
+		JPanel northPanel = new JPanel ();
+		northPanel.add(view);
+		northPanel.add(viewsubject);
+		northPanel.add(viewpost);
+		northPanel.add(posttext);
+		northPanel.add(quitapp);
+		
+		this.add(northPanel,BorderLayout.SOUTH);
+		
+		process= new JTextArea("App Started...\nPlease select Command : \n", 40, 40);
+		JPanel centerPanel = new JPanel(new GridLayout(1,1));
+		centerPanel.add(new JScrollPane(process));
+		process.setEditable(false);
+		add(centerPanel, BorderLayout.CENTER);
+		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(600, 600);
+		setVisible(true);
+		
+	}
+	
+	void showText(String str) {
+		process.append(str);
+		process.setCaretPosition(process.getText().length() - 1);
+	}
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if(o==view){
+			command = "view";
+			process.setText("");
+		}
+		else if (o== viewsubject){
+			command = "viewsubject";
+		}
+		else if (o==viewpost){
+			command = "viewpost";
+		}
+		else if (o == posttext){
+			command = "posttext";
+		}
+		else if (o == quitapp){
+			command = "quitapp";
+			
+		}
+	}
+
+	public static void main(String[] args) {
+		AppStarter appstarter = new AppStarter();
+		try {
+			appstarter.begin();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

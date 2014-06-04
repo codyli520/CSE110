@@ -34,7 +34,7 @@ public class TextReceiver {
 	public static void main(String[] args) throws JMSException{
 		TextReceiver testReceiver = new TextReceiver("test0");
 		testReceiver.readMessage();
-		System.out.println("done");
+		//System.out.println("done");
 	}
 	
 	public TextReceiver() throws JMSException{
@@ -63,9 +63,9 @@ public class TextReceiver {
 			session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);       
 			destination = session.createQueue(topic);
 			consumer = session.createConsumer(destination);
-			System.out.println("start receive");
+			//System.out.println("start receive");
 			blobMessage = (BlobMessage)consumer.receive(10000);
-			System.out.println("inside receive");
+			//System.out.println("inside receive");
 		}
 		catch(JMSException e){
 			System.out.println("!");
@@ -82,13 +82,13 @@ public class TextReceiver {
 	
 	//this method should only be called if blobReceive returns true
 	public boolean readMessage(){
-		System.out.println("read start");
+		//System.out.println("read start");
 		if (!blobReceive()){
-			System.out.println("error blob receive");
+			//System.out.println("error blob receive");
 			return false;
 		}
 		else{
-			System.out.println("go go go");
+			//System.out.println("go go go");
 			try{
 				String fileName = blobMessage.getStringProperty("FILE.NAME");                       	                          
 				File file = new File("ToRead.txt");                            

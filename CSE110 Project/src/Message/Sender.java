@@ -2,9 +2,11 @@ package Message;
 
 
 
+import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -39,17 +41,8 @@ public class Sender {
     // Max number of queues
     static final int maxQueue = 1000;
     int mode; //0, default mode, take system in, other, take inputString
-    private SenderGUI sg;
-    /*public static void main(String args[]) throws IOException{
-    	if( args.length >= 2 && args[0] != null && args[1] != null){
-    		Sender sender = new Sender(Integer.parseInt(args[0]), 0);
-    		sender.fullSendService(args[1], null);
-    	}
-    	else{
-    		Sender sender = new Sender();
-    		sender.fullSendService("FirstQueue", null);
-    	}
-    }*/
+    public SenderGUI sg;
+    
     
     public Sender()
     {
@@ -117,7 +110,8 @@ public class Sender {
         numOfQueue = 0;
         mode = new_mode;
         rid=new_rid;
-        sg = gui;
+        this.sg = gui;
+       // sg.setVisible(true);
     }
     public void sendPrep(String queue) throws IOException{
         try {
@@ -141,6 +135,7 @@ public class Sender {
     public String grabMessage(String inputString) throws IOException{
     	if( mode == 0 ){
     		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    		//BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     		return br.readLine();
     	}
     	else{
@@ -150,13 +145,14 @@ public class Sender {
 
     public void sendMessage( MessageProducer producer, String inputString){   
     	try{
+    		
     		String inputstring = grabMessage(inputString);
             if (rid!=0)
             	inputString="To "+Integer.toString(rid)+":"+inputString;
     		TextMessage message = session
     	            .createTextMessage(inputstring);
 	        System.out.println("try to send:" + inputstring);
-    		
+    		sg.showText("try to send:" + inputstring);
     	        producer.send(message);
     	}
     	catch(Exception e){
@@ -175,6 +171,7 @@ public class Sender {
     		sendMessage(producers[numOfQueue], inputString);
     		numOfQueue++;
     		session.commit();
+    		
     	}catch (Exception e) {
     		numOfQueue = currentNumOfQueue;
     		e.printStackTrace();
@@ -218,7 +215,7 @@ public class Sender {
     	return numOfQueue;
         }
         
-        class ListenFromServer extends Thread {
+        /*class ListenFromServer extends Thread {
 
     		public void run() {
     						int i=0;
@@ -226,6 +223,18 @@ public class Sender {
     						i++;
     		}
     	}
-        
+        */
+       /* public static void main(String args[]) throws IOException{
+        	if( args.length >= 2 && args[0] != null && args[1] != null){
+        		
+        		Sender sender = new Sender(Integer.parseInt(args[0]), 0);
+        		sender.fullSendService(args[1], null);
+        		
+        	}
+        	else{
+        		Sender sender = new Sender();
+        		sender.fullSendService("FirstQueue", null);
+        	}
+        }*/
 
 }

@@ -1,9 +1,9 @@
 package Message;
 
 public class QueueName{
-	//mode 1  发文章
-	//mode 2 回复给别人
-	//mode 3 评论文章
+	//mode 1 POST
+	//mode 2 REPLY TO A USER
+	//mode 3 REPLY TO AN ARTICLE
   public static String queuename(int id, int mode){
 	  
     if (mode==3)  
