@@ -292,7 +292,7 @@ public class AppStarter extends JFrame implements ActionListener {
 
 
 
-	//private JLabel label;
+	private JLabel label1,label2;
 
 	private JTextField input,input2;
 
@@ -317,7 +317,11 @@ public class AppStarter extends JFrame implements ActionListener {
 		posttext = new JButton("Post");
 		quitapp = new JButton("quit");
 		//send = new JButton("Send");
-
+		viewsubject.setEnabled(false);
+		viewpost.setEnabled(false);
+		label1 = new JLabel("Input topic here");
+		label2 = new JLabel ("Enter content here");
+		
 
 		view.addActionListener(this);
 		viewsubject.addActionListener(this);
@@ -327,20 +331,27 @@ public class AppStarter extends JFrame implements ActionListener {
 		//send.addActionListener(this);
 
 
-		JPanel northPanel = new JPanel (new GridLayout(2,1));
+		JPanel southPanel = new JPanel (new GridLayout(3,1));
 		JPanel bot = new JPanel (new GridLayout(1,2));
 		JPanel bot2 = new JPanel (new GridLayout(1,5));
+		JPanel bot3 = new JPanel (new GridLayout(1,2));
+		
+		bot3.add(label1);
+		bot3.add(label2);
+		southPanel.add(bot3);
 		bot.add(input);
 		bot.add(input2);
-		northPanel.add(bot);
+		southPanel.add(bot);
 		bot2.add(view);
 		bot2.add(viewsubject);
 		bot2.add(viewpost);
 		bot2.add(posttext);
 		bot2.add(quitapp);
 
-		northPanel.add(bot2);
-		this.add(northPanel,BorderLayout.SOUTH);
+		southPanel.add(bot2);
+		
+		
+		this.add(southPanel,BorderLayout.SOUTH);
 
 		process= new JTextArea("App Started...\nPlease select Command : \n", 40, 40);
 		JPanel centerPanel = new JPanel(new GridLayout(1,1));
@@ -361,6 +372,8 @@ public class AppStarter extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		o = e.getSource();
 		if(o==view){
+			viewsubject.setEnabled(true);
+			viewpost.setEnabled(true);
 			command = "view";
 
 
