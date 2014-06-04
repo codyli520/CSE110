@@ -19,7 +19,7 @@ public class AppStarter extends JFrame implements ActionListener {
 	String command = null;
 	String command2 = null;
 	Object o;
-	String topic;
+	String topic,content;
 	boolean start = true;
 	Scanner scan = new Scanner(System.in);
 	InputStreamReader ISR = new InputStreamReader(System.in);
@@ -36,6 +36,7 @@ public class AppStarter extends JFrame implements ActionListener {
 	CreateText newtext;
 	WriteText writetext;
 	int topicSent= 0;
+	boolean terminal =  false;
 	//	Appstarter app;
 
 
@@ -68,18 +69,22 @@ public class AppStarter extends JFrame implements ActionListener {
 					command = in.readLine();
 					if( command == null || command.equals("") ){
 						command = null;
+						
 						continue;
 					}
 					else{
 						System.out.println("terminal command " + command);
+						terminal = true;
 					}
 				}
 				else{
 					if( command != null )
 					{
 						System.out.println("GUI command " + command);
+						terminal = false;
 					}
 					else{
+						
 						continue;
 					}
 				}
@@ -119,17 +124,46 @@ public class AppStarter extends JFrame implements ActionListener {
 
 			}
 			else if(command.equals("viewsubject")){
+               if(terminal == false){
+            	   process.append("\n\nsubject name: \n"+input.getText());
+            	   String GUIsubject = input.getText();
+   				fileName = GUIsubject;
+   				filePath = directoryPath + GUIsubject;
+   				file = new File(filePath);  
+   				try {
+   					reader = new BufferedReader(new FileReader(file));
 
+   					while ((text = reader.readLine()) != null) {
+   						process.append("\n"+text);
+   						
+   					}
+   				} catch (FileNotFoundException e) {
+   					e.printStackTrace();
+   				} catch (IOException e) {
+   					e.printStackTrace();
+   				} finally {
+   					try {
+   						if (reader != null) {
+   							reader.close();
+   						}
+   					} catch (IOException e) {
+   					}
+               }
+               }
+   				else{
 				System.out.println("Please enter the subject name: ");
+				
+				 
+			   //while(command.equals("send")){
 				String subject = scan.next();
 				fileName = subject;
 				filePath = directoryPath + subject;
-				file = new File(filePath);   
-
+				file = new File(filePath);  
 				try {
 					reader = new BufferedReader(new FileReader(file));
 
 					while ((text = reader.readLine()) != null) {
+						process.append("\n"+text);
 						System.out.println(text);
 					}
 				} catch (FileNotFoundException e) {
@@ -144,26 +178,71 @@ public class AppStarter extends JFrame implements ActionListener {
 					} catch (IOException e) {
 					}
 				}
-
+			  }
 			}
 			else if(command.equals("viewpost")){
 
+				//System.out.println("Please enter the topic name: ");
+				//process.append("\n\nPlease enter the topic name: ");
+				if(terminal == false){
+					String GUItopic = input.getText();
+					process.append("\n\nTopic name entered\n" + GUItopic);
+					fileName = GUItopic;
+					filePath = directoryPath + fileName;
+					if(GUItopic != null)
+						user1.receiveMessage(GUItopic);
+					else
+						System.out.println("topic name cannot be empty");
+				}
+				
+				else if (terminal == true){
 				System.out.println("Please enter the topic name: ");
 				String topicname = scan.next();
+				
 				fileName = topicname;
 				filePath = directoryPath + fileName;
 				if(topicname != null)
 					user1.receiveMessage(topicname);
 				else
 					System.out.println("topic name cannot be empty");
+				}
 
 			}
 			else if(command.equals("posttext") ){
-				process.append("\n\nPlease enter the topic name");
+				if(terminal == false){
+				
+				topic= input.getText(); 
+						while(topic==null || topic.equals("")){
+
+							if((topic = input.getText())== null){
+								process.setText("Topic cannot be null");
+							}
+
+						}
+						
+						filePath = directoryPath + user1.getUsername()+"-"+topic;
+						
+						
+						content = input2.getText();
+						process.append("\n\ntopic name\n"+topic);
+						process.append("\n\ncontent\n"+content);
+						writetext = new WriteText(directoryPath+"host-subject");
+						writetext.writeToText(user1.getUsername()+"-"+content);
+						newtext = new CreateText(directoryPath, topic, user1.getUsername());
+						newtext.writeToFile(topic);
+
+						if(topic != null){
+							user1.publishMessage(user1.getUsername()+"-"+topic, filePath);
+						}
+						
+				}
+				
+				
+				else{
 				System.out.println("Please enter the topic name:");
 
-				topic= input.getText() ;
-				process.append("\n"+topic);
+				
+				//process.append("\n"+topic);
 
 				//input.addActionListener(this);
 
@@ -179,7 +258,7 @@ public class AppStarter extends JFrame implements ActionListener {
 				filePath = directoryPath + user1.getUsername()+"-"+topic;
 				writetext = new WriteText(directoryPath+"host-subject");
 				writetext.writeToText(user1.getUsername()+"-"+topic);
-				newtext = new CreateText(directoryPath, topic, user1.getUsername());
+				//newtext = new CreateText(directoryPath, topic, user1.getUsername());
 				//topicSent = 1;
 
 				process.append("\n\nPlease Enter the Post Content:");
@@ -189,13 +268,14 @@ public class AppStarter extends JFrame implements ActionListener {
 
 			//else if(command.equals("sent")){
 				//topic= input.getText() ;
-				//newtext = new CreateText(directoryPath, topic, user1.getUsername());
+				newtext = new CreateText(directoryPath, topic, user1.getUsername());
 				newtext.writeToFile(topic);
 
 				if(topic != null){
 					user1.publishMessage(user1.getUsername()+"-"+topic, filePath);
 				}
 				//newtext = new CreateText(directoryPath, topic, user1.getUsername());
+			}
 			}
 
 
@@ -212,30 +292,31 @@ public class AppStarter extends JFrame implements ActionListener {
 
 
 
-	private JLabel label;
+	//private JLabel label;
 
-	private JTextField input;
+	private JTextField input,input2;
 
 
 	//private JTextField tfServer, tfPort;
 
-	private JButton view, viewsubject,viewpost,posttext,quitapp,send;
+	private JButton view, viewsubject,viewpost,posttext,quitapp;
 
 	private JTextArea process;
 
-	private boolean connected;
+	//private boolean connected;
 	//private Sender Sender;
-	private int defaultPort;
+	//private int defaultPort;
 
 
 	AppStarter(){
 		input = new JTextField(10);
+		input2 = new JTextField(10);
 		view = new JButton("View");
 		viewsubject = new JButton("View Subject");
 		viewpost = new JButton("View Post");
 		posttext = new JButton("Post");
 		quitapp = new JButton("quit");
-		send = new JButton("Send");
+		//send = new JButton("Send");
 
 
 		view.addActionListener(this);
@@ -243,14 +324,14 @@ public class AppStarter extends JFrame implements ActionListener {
 		viewpost.addActionListener(this);
 		posttext.addActionListener(this);
 		quitapp.addActionListener(this);
-		send.addActionListener(this);
+		//send.addActionListener(this);
 
 
 		JPanel northPanel = new JPanel (new GridLayout(2,1));
 		JPanel bot = new JPanel (new GridLayout(1,2));
 		JPanel bot2 = new JPanel (new GridLayout(1,5));
 		bot.add(input);
-		bot.add(send);
+		bot.add(input2);
 		northPanel.add(bot);
 		bot2.add(view);
 		bot2.add(viewsubject);
@@ -299,15 +380,11 @@ public class AppStarter extends JFrame implements ActionListener {
 			command = "quitapp";
 			System.exit(0);
 		}
-		else if( o ==  send){
-			if(topicSent == 0)
-				command = "send";
-			else if(topicSent == 1)
-				command = "sent";
-			else if(topicSent == 2)
-				command = "sent";
-			//topic = input.getText().trim();
-		}
+		/*else if( o ==  send){
+			command = "send";
+			topic = input.getText();
+			input.setText("");
+		}*/
 	}
 
 	public static void main(String[] args) {
