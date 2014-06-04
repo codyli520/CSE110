@@ -26,27 +26,23 @@ public class TextPublisher {
 	MessageProducer producer;
 	BlobMessage blobMessage;
 	String topic;
-
-	public static void main(String[] args){
-		TextPublisher testPublisher = new TextPublisher("test0");
-		testPublisher.publishMessage();
-	}
+	String filepath;
 	
 	public TextPublisher(){
-		this("test0");
+		
 	}
 	
-	public TextPublisher(String newTopic){  
-		fileChooser = new JFileChooser();
-		topic = newTopic;
+	public TextPublisher(String newTopic, String filepath){ 
+	    topic = newTopic;
+	    this.filepath = filepath;		
 	}
 
 	public boolean chooseFile(){
-		fileChooser.setDialogTitle("Choose the text you want to post");       
-		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {         
-			return false;         
-		}    
-		file = fileChooser.getSelectedFile(); 
+//		fileChooser.setDialogTitle("Choose the text you want to post");       
+//		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {         
+//			return false;         
+//		}    
+		file = new File(filepath); 
 		return true;
 	}
 
@@ -89,5 +85,6 @@ public class TextPublisher {
 		}
 	}
 }
+
 
 
