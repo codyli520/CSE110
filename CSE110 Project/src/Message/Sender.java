@@ -60,6 +60,7 @@ public class Sender {
         numOfQueue = 0;
         mode = 0;
         rid=0;
+        sg = new SenderGUI("localhost", 8161);
     }
     
     public Sender(int new_sid, int new_mode){
@@ -77,6 +78,7 @@ public class Sender {
         numOfQueue = 0;
         mode = new_mode;
         rid=0;
+        sg = new SenderGUI("localhost", 8161);
     }
     public Sender(int new_sid, int new_mode, int new_rid){
     	// TextMessage message;
@@ -93,6 +95,7 @@ public class Sender {
         numOfQueue = 0;
         mode = new_mode;
         rid=new_rid;
+        sg = new SenderGUI("localhost", 8161);
     }
     
     public Sender(int new_sid, int new_mode, int new_rid,SenderGUI gui){
@@ -156,6 +159,7 @@ public class Sender {
     	        producer.send(message);
     	}
     	catch(Exception e){
+    		e.printStackTrace();
     		System.err.println(e.toString() + "Message not send successfully.");
     	}
     	
