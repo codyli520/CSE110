@@ -22,12 +22,25 @@ public class Receiver {
     Destination destination;
     // Consumer
     MessageConsumer consumer;
+    
+    String queue = null;
+    
     public Receiver(){
     connectionFactory = new ActiveMQConnectionFactory(
             ActiveMQConnection.DEFAULT_USER,
             ActiveMQConnection.DEFAULT_PASSWORD,
             "tcp://localhost:61616");
+    queue = "Firstqueue";
     }
+    
+    public Receiver(String user){
+        connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMQConnection.DEFAULT_USER,
+                ActiveMQConnection.DEFAULT_PASSWORD,
+                "tcp://localhost:61616");
+        queue = user;
+        }
+    
     public void receiverPrep() throws JMSException{
     	connection = connectionFactory.createConnection();
         // 
@@ -37,7 +50,7 @@ public class Receiver {
                 Session.AUTO_ACKNOWLEDGE);
         // 
         //take user input, decide which queue it should be
-        destination = session.createQueue("FirstQueue");
+        destination = session.createQueue(queue);
         consumer =session.createConsumer(destination);	
     	
     }
@@ -51,7 +64,7 @@ public class Receiver {
         }
     	
     }
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         Receiver rev=new Receiver();
         try {
             rev.receiverPrep();
@@ -71,7 +84,7 @@ public class Receiver {
             } catch (Throwable ignore) {
             }
         }
-    }*/
+    }
 public Connection getConnection(){
     	return connection;
         }

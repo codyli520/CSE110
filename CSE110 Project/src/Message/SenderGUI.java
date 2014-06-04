@@ -1,5 +1,6 @@
 package Message;
 
+import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.swing.*;
 
@@ -20,7 +21,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 	private JLabel label;
 	
 	private JTextField tf;
-	public JTextField messageTf;
+	public JTextField messageTf,toTf;
 	
 	private JTextField tfServer, tfPort;
 	
@@ -30,6 +31,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 	
 	private boolean connected;
 	private Sender Sender;
+	private Receiver Receiver;
 	private int defaultPort;
 	private String defaultHost, user;
 	
@@ -83,7 +85,8 @@ public class SenderGUI extends JFrame implements ActionListener {
 		centerPanel.add(new JScrollPane(ta));
 		ta.setEditable(false);
 		add(centerPanel, BorderLayout.CENTER);
-
+		
+		toTf = new JTextField(10);
 		messageTf = new JTextField();
 		messageTf.setBackground(Color.WHITE);
 				// you have to login before being able to logout
@@ -95,6 +98,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 		JPanel southPanel = new JPanel(new GridLayout(2,1));
 		JPanel buttonPanel = new JPanel();
 		southPanel.add(messageTf);
+		buttonPanel.add(toTf);
 		buttonPanel.add(send);
 		buttonPanel.add(receive);
 		southPanel.add(buttonPanel);
@@ -137,10 +141,13 @@ public class SenderGUI extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		
 		// if it is the Logout button
-		/*if(o == logout) {
-			return;
+		if(o == logout) {
+			tf.setText("");
+			login.setEnabled(true);
+			
+			logout.setEnabled(false);
 		}
-		*/
+		
 		
 		/*if(connected) {
 			// just have to send the message
@@ -162,10 +169,13 @@ public class SenderGUI extends JFrame implements ActionListener {
 			}
 			else{
 					try {
+						int usr = Integer.parseInt(user);
+						int rec = Integer.parseInt(toTf.getText());
+						Sender = new Sender(usr, 2, rec, this);
 						
-						ta.setText("");
-						Sender.fullSendService(user, messageTf.getText());
 						
+						Sender.fullSendService(toTf.getText(), messageTf.getText());
+						messageTf.setText("");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -175,16 +185,22 @@ public class SenderGUI extends JFrame implements ActionListener {
 		}
 		
 		if(o == receive){
-			
+			Receiver = new Receiver(tf.getText());
+			try {
+				Receiver.receiveMessage();
+			} catch (JMSException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 		if(o == login) {
 			
-			String username = tf.getText().trim();
+			 //username = tf.getText().trim();
 			user = tf.getText().trim();
-			int usr = Integer.parseInt(username);
+			int usr = Integer.parseInt(user);
 			
-			if(username.length() == 0)
+			if(user.length() == 0)
 				return;
 			
 			String server = tfServer.getText().trim();
@@ -205,10 +221,10 @@ public class SenderGUI extends JFrame implements ActionListener {
 			}
 
 			// try creating a new Sender with GUI
-			Sender = new Sender(usr, 0, port, this);
+			
 			// test if we can start the Sender
 			//String id = tf.getText();
-			tf.setText("");
+			//tf.setText("");
 			ta.setText("Enter your message below, click Send when finish");
 			
 			connected = true;

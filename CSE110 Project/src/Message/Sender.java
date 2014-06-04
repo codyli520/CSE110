@@ -228,7 +228,7 @@ public class Sender {
     		}
     	}
         */
-       /* public static void main(String args[]) throws IOException{
+        public static void main(String args[]) throws IOException{
         	if( args.length >= 2 && args[0] != null && args[1] != null){
         		
         		Sender sender = new Sender(Integer.parseInt(args[0]), 0);
@@ -239,6 +239,6 @@ public class Sender {
         		Sender sender = new Sender();
         		sender.fullSendService("FirstQueue", null);
         	}
-        }*/
+        }
 
 }
