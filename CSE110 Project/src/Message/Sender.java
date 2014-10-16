@@ -36,6 +36,7 @@ public class Sender {
     int rid;
     // String[] queues
     String[] queues;
+    String queue;
     // int numOfQueue, number of established queue;
     int numOfQueue;
     // Max number of queues
@@ -98,7 +99,7 @@ public class Sender {
         sg = new SenderGUI("localhost", 8161);
     }
     
-    public Sender(int new_sid, int new_mode, int new_rid,SenderGUI gui){
+    public Sender(int new_sid, int new_mode, int new_rid, SenderGUI gui){
     	// TextMessage message;
         // ConnectionFactory
         connectionFactory = new ActiveMQConnectionFactory(
@@ -154,9 +155,9 @@ public class Sender {
             	inputString="To "+Integer.toString(rid)+":"+inputString;
     		TextMessage message = session
     	            .createTextMessage(inputstring);
-	        System.out.println("try to send:" + inputstring);
-    		sg.showText("try to send:" + inputstring);
-    	        producer.send(message);
+    	    producer.send(message);
+    	    System.out.println("Send to " + queue + " Message: "  + inputstring);
+    	    sg.showText("Send to " + queue + " Message: " + inputstring);
     	}
     	catch(Exception e){
     		e.printStackTrace();
@@ -172,6 +173,7 @@ public class Sender {
     	try{
     		
     		sendPrep(queue);
+    		this.queue = queue;
     		sendMessage(producers[numOfQueue], inputString);
     		numOfQueue++;
     		session.commit();
@@ -219,15 +221,7 @@ public class Sender {
     	return numOfQueue;
         }
         
-        /*class ListenFromServer extends Thread {
 
-    		public void run() {
-    						int i=0;
-    						sg.showText(queues[i]);
-    						i++;
-    		}
-    	}
-        */
         public static void main(String args[]) throws IOException{
         	if( args.length >= 2 && args[0] != null && args[1] != null){
         		

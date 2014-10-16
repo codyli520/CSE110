@@ -24,13 +24,15 @@ public class Receiver {
     MessageConsumer consumer;
     
     String queue = null;
+    public SenderGUI sg;
     
     public Receiver(){
     connectionFactory = new ActiveMQConnectionFactory(
             ActiveMQConnection.DEFAULT_USER,
             ActiveMQConnection.DEFAULT_PASSWORD,
             "tcp://localhost:61616");
-    queue = "Firstqueue";
+    queue = "FirstQueue";
+    sg = new SenderGUI("localhost", 8161);
     }
     
     public Receiver(String user){
@@ -39,7 +41,18 @@ public class Receiver {
                 ActiveMQConnection.DEFAULT_PASSWORD,
                 "tcp://localhost:61616");
         queue = user;
-        }
+        sg = new SenderGUI("localhost", 8161);
+     }
+    
+    public Receiver(String user, SenderGUI gui){
+        connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMQConnection.DEFAULT_USER,
+                ActiveMQConnection.DEFAULT_PASSWORD,
+                "tcp://localhost:61616");
+        queue = user;
+        sg = gui;
+     }
+    
     
     public void receiverPrep() throws JMSException{
     	connection = connectionFactory.createConnection();
@@ -57,7 +70,8 @@ public class Receiver {
     public String receiveMessage() throws JMSException{
     	TextMessage message = (TextMessage) consumer.receive(1000);
         if (null != message) {
-            System.out.println("Receive " + message.getText());
+            System.out.println("Receive from : " + queue + " Message: " + message.getText());
+            sg.showText("Receive from : " + queue + " Message: " + message.getText());
             return message.getText();
         } else {
             return null;
@@ -65,11 +79,10 @@ public class Receiver {
     	
     }
     public static void main(String[] args) {
-        Receiver rev=new Receiver();
+    	Receiver rev=new Receiver("456");
         try {
             rev.receiverPrep();
-            
-            while (true) {
+                while (true) {
                 if(rev.receiveMessage()==null){
                 	break;
                 }
@@ -81,6 +94,26 @@ public class Receiver {
             try {
                 if (null != rev.connection)
                     rev.connection.close();
+            } catch (Throwable ignore) {
+            }
+        }
+    }
+    
+    public void fullServiceReceive(){
+        try {
+            this.receiverPrep();
+                while (true) {
+                if(this.receiveMessage()==null){
+                	break;
+                }
+                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != this.connection)
+                    this.connection.close();
             } catch (Throwable ignore) {
             }
         }

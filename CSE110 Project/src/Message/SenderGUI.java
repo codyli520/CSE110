@@ -18,7 +18,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	// will first hold "Username:", later on "Enter message"
-	private JLabel label;
+	private JLabel label,contact;
 	
 	private JTextField tf;
 	public JTextField messageTf,toTf;
@@ -43,9 +43,10 @@ public class SenderGUI extends JFrame implements ActionListener {
 		defaultHost = host;
 		
 		
-		JPanel northPanel = new JPanel(new GridLayout(2,1));
+		JPanel northPanel = new JPanel(new GridLayout(3,1));
+		JPanel top0 = new JPanel(new GridLayout(1,4));
 		JPanel top = new JPanel(new GridLayout(1,3));
-		
+		JPanel top2 = new JPanel();
 		JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3));
 		
 		login = new JButton("Login");
@@ -64,19 +65,23 @@ public class SenderGUI extends JFrame implements ActionListener {
 		serverAndPort.add(tfPort);
 		serverAndPort.add(new JLabel(""));
 		
-		northPanel.add(serverAndPort);
+		top0.add(serverAndPort);
 
 		label = new JLabel("Enter your username");
+		contact = new JLabel("Contact info: For any questions, please contact 858-000-0000");
 		
 		top.add(label);
 		
+		top2.add(contact);
 		tf = new JTextField();
 		tf.setBackground(Color.WHITE);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		top.add(tf);
 		top.add(login);
 		top.add(logout);
+		northPanel.add(top0);
 		northPanel.add(top);
+		northPanel.add(top2);
 		add(northPanel, BorderLayout.NORTH);
 
 		
@@ -113,7 +118,7 @@ public class SenderGUI extends JFrame implements ActionListener {
 
 	
 	void showText(String str) {
-		ta.append(str);
+		ta.append("\n" + str);
 		ta.setCaretPosition(ta.getText().length() - 1);
 	}
 	
@@ -185,13 +190,10 @@ public class SenderGUI extends JFrame implements ActionListener {
 		}
 		
 		if(o == receive){
-			Receiver = new Receiver(tf.getText());
-			try {
-				Receiver.receiveMessage();
-			} catch (JMSException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Receiver = new Receiver(tf.getText(), this);
+			System.out.println("Receive message for " + tf.getText());
+			this.showText("Receive message for " + tf.getText());
+			Receiver.fullServiceReceive();
 		}
 		
 		if(o == login) {
